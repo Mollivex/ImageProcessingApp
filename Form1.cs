@@ -12,6 +12,7 @@ namespace ImageProcessingApp
 {
     public partial class Form1 : Form
     {
+        public List<Bitmap> _bitmaps = new List<Bitmap>();
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +29,14 @@ namespace ImageProcessingApp
             {
                 pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
             }
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (_bitmaps == null || _bitmaps.Count == 0)
+                return;
+
+            pictureBox1.Image = _bitmaps[trackBar1.Value - 1];
         }
     }
 }
