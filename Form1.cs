@@ -33,6 +33,7 @@ namespace ImageProcessingApp
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
+            // exception handlings if list of elements _bitmap is null or doesn't has any elements
             if (_bitmaps == null || _bitmaps.Count == 0)
                 return;
 
