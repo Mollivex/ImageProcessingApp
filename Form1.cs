@@ -26,7 +26,7 @@ namespace ImageProcessingApp
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-
+                pictureBox1.Image = Bitmap.FromFile(openFileDialog1.FileName);
             }
         }
     }
