@@ -20,14 +20,14 @@ namespace ImageProcessingApp
             InitializeComponent();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            await Task.Run(() => this.Close());
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 // Clear the last one image
                 pictureBox1.Image = null;
@@ -35,7 +35,7 @@ namespace ImageProcessingApp
                 // Declare a new variable where our new image will save
                 var bitmap = new Bitmap(openFileDialog1.FileName);
                 // Run image processing
-                RunProcessing(bitmap);
+                await Task.Run(() => { RunProcessing(bitmap); });
             }
         }
 
@@ -71,8 +71,11 @@ namespace ImageProcessingApp
                 // Add new bitmap in the current collection
                 _bitmaps.Add(currentBitmap);
 
-                // Show 
-                Text = $"{i} %";
+                // Update UI element through delegate
+                this.Invoke(new Action(() =>
+                {
+                    Text = $"{i} %";
+                }));
             }
 
             // Add full current image for the last iteration (100%)
