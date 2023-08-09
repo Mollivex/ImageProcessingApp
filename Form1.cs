@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ImageProcessingApp
 {
@@ -29,6 +30,8 @@ namespace ImageProcessingApp
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                var sw = Stopwatch.StartNew();
+
                 // Hide UI access during app activity
                 menuStrip1.Enabled = trackBar1.Enabled = false;
                 // Clear the last one image
@@ -40,6 +43,9 @@ namespace ImageProcessingApp
                 await Task.Run(() => { RunProcessing(bitmap); });
                 // Enable UI access after app activity is done
                 menuStrip1.Enabled = trackBar1.Enabled = Enabled;
+
+                sw.Stop();
+                Text = sw.Elapsed.ToString();
             }
         }
 
