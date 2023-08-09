@@ -12,7 +12,9 @@ namespace ImageProcessingApp
 {
     public partial class Form1 : Form
     {
-        public List<Bitmap> _bitmaps = new List<Bitmap>();
+        private List<Bitmap> _bitmaps = new List<Bitmap>();
+        private Random _random = new Random();
+
         public Form1()
         {
             InitializeComponent();
@@ -41,7 +43,36 @@ namespace ImageProcessingApp
         /// </summary>
         private void RunProcessing(Bitmap bitmap)
         {
+            var pixels = GetPixels(bitmap);
 
+            // Number of pixel for 1% of trackbar
+            var pixelInStep = (bitmap.Height * bitmap.Width) / 100;
+            var currentPixelSet = new List<Pixel>(pixels.Count - pixelInStep);
+
+            // Choose random number of pixels for current trackBar % status
+            for (int i = 1; i < trackBar1.Maximum; i++)
+            {
+                for (int j = 0; j<pixelInStep; j++)
+                {
+                    // random number of pixels from bitmap
+                    var index = _random.Next(pixels.Count);
+                    // place those pixels in list
+                    currentPixelSet.Add(pixels[index]);
+                    // delete those number of pixels from main collection
+                    pixels.RemoveAt(index);
+                }
+                // create a new image (bitmap)
+                var currentBitmap = new Bitmap(bitmap.Height, bitmap.Width);
+
+                // processing
+                foreach (var pixel in currentPixelSet)
+                    currentBitmap.SetPixel(pixel.Point.X, pixel.Point.Y, pixel.Color);
+                
+                Text = $"{i} %";
+            }
+
+            // add full current image for the last iteration (100%)
+            _bitmaps.Add(bitmap);
         }
 
         /// <summary>
