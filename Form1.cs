@@ -29,6 +29,8 @@ namespace ImageProcessingApp
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                // Hide UI access during app activity
+                menuStrip1.Enabled = trackBar1.Enabled = false;
                 // Clear the last one image
                 pictureBox1.Image = null;
                 _bitmaps.Clear();
@@ -36,6 +38,8 @@ namespace ImageProcessingApp
                 var bitmap = new Bitmap(openFileDialog1.FileName);
                 // Run image processing
                 await Task.Run(() => { RunProcessing(bitmap); });
+                // Enable UI access after app activity is done
+                menuStrip1.Enabled = trackBar1.Enabled = Enabled;
             }
         }
 
