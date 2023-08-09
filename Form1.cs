@@ -29,12 +29,13 @@ namespace ImageProcessingApp
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                // clear the last one image
+                // Clear the last one image
                 pictureBox1.Image = null;
                 _bitmaps.Clear();
-
-                // declare a new variable where our new image will save
+                // Declare a new variable where our new image will save
                 var bitmap = new Bitmap(openFileDialog1.FileName);
+                // Run image processing
+                RunProcessing(bitmap);
             }
         }
 
@@ -46,32 +47,35 @@ namespace ImageProcessingApp
             var pixels = GetPixels(bitmap);
 
             // Number of pixel for 1% of trackbar
-            var pixelInStep = (bitmap.Height * bitmap.Width) / 100;
-            var currentPixelSet = new List<Pixel>(pixels.Count - pixelInStep);
+            var pixelsInStep = (bitmap.Width * bitmap.Height) / 100;
+            var currentPixelSet = new List<Pixel>(pixels.Count - pixelsInStep);
 
             // Choose random number of pixels for current trackBar % status
             for (int i = 1; i < trackBar1.Maximum; i++)
             {
-                for (int j = 0; j<pixelInStep; j++)
+                for (int j = 0; j < pixelsInStep; j++)
                 {
-                    // random number of pixels from bitmap
+                    // Random number of pixels from bitmap
                     var index = _random.Next(pixels.Count);
-                    // place those pixels in list
+                    // Place those pixels in list
                     currentPixelSet.Add(pixels[index]);
-                    // delete those number of pixels from main collection
+                    // Delete those number of pixels from main collection
                     pixels.RemoveAt(index);
                 }
-                // create a new image (bitmap)
-                var currentBitmap = new Bitmap(bitmap.Height, bitmap.Width);
-
-                // processing
+                // Create a new image (bitmap)
+                var currentBitmap = new Bitmap(bitmap.Width, bitmap.Height);
+                // Processing new bitmap
                 foreach (var pixel in currentPixelSet)
                     currentBitmap.SetPixel(pixel.Point.X, pixel.Point.Y, pixel.Color);
                 
+                // Add new bitmap in the current collection
+                _bitmaps.Add(currentBitmap);
+
+                // Show 
                 Text = $"{i} %";
             }
 
-            // add full current image for the last iteration (100%)
+            // Add full current image for the last iteration (100%)
             _bitmaps.Add(bitmap);
         }
 
@@ -82,7 +86,7 @@ namespace ImageProcessingApp
         /// <returns></returns>
         private List<Pixel> GetPixels(Bitmap bitmap)
         {
-            var pixels = new List<Pixel>(bitmap.Height * bitmap.Width);
+            var pixels = new List<Pixel>(bitmap.Width * bitmap.Height);
 
             for (int y = 0; y < bitmap.Height; y++)
             {
@@ -100,11 +104,11 @@ namespace ImageProcessingApp
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            // exception handlings if the list of elements _bitmap is null or exist, but doesn't has any elements
+            // Exception handlings if the list of elements _bitmap is null or exist, but doesn't has any elements
             if (_bitmaps == null || _bitmaps.Count == 0)
                 return;
 
-            pictureBox1.Image = _bitmaps[trackBar1.Value - 1];
+            pictureBox1.Image = _bitmaps[trackBar1.Value - 1 ];
         }
     }
 }
